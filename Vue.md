@@ -127,6 +127,3 @@ const data ={
 * beforeUnmount() - 
 * unmounted() - 
   
-## Components
-
-## Vue CLI

@@ -1,0 +1,8 @@
+<li>
+    <h2 @click="toggleFavorite(friend.id)">{{friend.name}}</h2>
+    <button @click="toggleDetails">{{showDetails? 'Hide': 'Show'}} Details</button>
+    <ul v-if="showDetails">
+        <li><strong>Phone:</strong> {{friend.phone}}</li>
+        <li><strong>Email:</strong>{{friend.email}}</li>
+    </ul>
+</li>
