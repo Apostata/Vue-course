@@ -1,0 +1,10 @@
+<li>
+    <h2>{{name}}</h2>
+    <button @click="toggleFavorite">Favorito:{{isFavorite}}</button>
+    <button @click="toggleDetails">{{showDetails? 'Hide': 'Show'}} Details</button>
+    <ul v-if="showDetails">
+        <li><strong>Phone:</strong> {{phone}}</li>
+        <li><strong>Email:</strong>{{email}}</li>
+    </ul>
+    <button @click="$emit('delete-friend', id)">Delete</button>
+</li>

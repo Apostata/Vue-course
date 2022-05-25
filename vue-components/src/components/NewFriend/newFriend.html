@@ -1,0 +1,20 @@
+<form @submit.prevent="addFriend" class="card">
+    <h2>Add new friend</h2>
+    <div>
+        <label>Name</label>
+        <input type="text" v-model="name" placeholder="Name" />
+    </div>
+    <div>
+        <label>Phone</label>
+        <input type="text" v-model="phone" placeholder="Phone" />
+    </div>
+    <div>
+        <label>Email</label>
+        <input type="email" v-model="email" placeholder="email" />
+    </div>
+    <div>
+        <label>isFavorite</label>
+        <input type="checkbox" v-model="isFavorite" :checked="isFavorite" />
+    </div>
+    <button type="submit">Add Friend</button>
+</form>

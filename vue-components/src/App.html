@@ -1,7 +1,11 @@
 <header>
     <h1>My Friends</h1>
 </header>
+<new-friend @add-friend="addFriend" />
 <ul>
-    <friend-item v-for="friend in friends" :friend="friend" :key="friend.id" :toggleFavorite="toggleFavorite">
+    <friend-item v-if="updateInParent" v-for="friend in friends" :id="friend.id" :name="friend.name"
+        :phone="friend.phone" :email="friend.email" :is-favorite="friend.isFavorite" :key="friend.id"
+        @toggle-favorite="toggleFavorite" @delete-friend="deleteFriend">
     </friend-item>
+
 </ul>

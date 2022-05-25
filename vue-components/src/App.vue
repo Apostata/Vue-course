@@ -4,9 +4,9 @@
 export default {
     data(){
         return {
-            teste:'oples',
+            updateInParent: true,
             friends:[
-            {
+                {
                     id:'rene',
                     name:'Rene Souza',
                     phone:'11 9-9834-4681',
@@ -34,17 +34,27 @@ export default {
                     email:'diana.souza@gmail.com',
                     isFavorite:false,
                 }
-        ]}
+            ]
+        }
     },
     methods:{
-        toggleFavorite:(id)=>{
-            console.log(id, this.teste)
-            // console.log(this.friends)
-            // const friendIdx = this.friends.findIndex((friend)=>friend.id===id);
-            // const newFriends = this.friends;
-            // newFriends.splice(friendIdx, 1, {...newFriends[friendIdx], isFavorite:!newFriends[friendIdx]})
-            // this.friends = newFriends;
+        toggleFavorite(id) {
+            console.log('updated in parent Component')
+            const friend = this.friends.find((fnd)=> fnd.id === id);
+            friend.isFavorite = !friend.isFavorite
+        },
+        toggleUpdateInParent(){
+            this.updateInParent = !this.updateInParent 
+        },
+        addFriend(friend){
+            if(friend.name.length > 0 && friend.phone.length > 0 && friend.email.length > 0){
+                const newFriend = {id: new Date().toISOString, ...friend, }
+                this.friends.push(newFriend)
+            }
+        }, 
+        deleteFriend(id){
+            this.friends = this.friends.filter((friend)=>friend.id !== id)
         }
-    }
+    },
 }
 </script>
