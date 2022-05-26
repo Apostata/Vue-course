@@ -7,7 +7,7 @@ import { createApp } from 'vue';
 import App from './App'
 import FriendsItem from './components/Friend-item'
 const app = createApp(App);  //cria o app
-app.component('friend-item', FriendsItem) //adiciona um componente
+app.component('friend-item', FriendsItem) //adiciona um componente de forma Global (não recomendado)
 app.mount('#app');
 
 ```
@@ -133,7 +133,11 @@ somente a lógica
 <template src="./App.html"></template>
 <style src="./App.css"></style>
 <script>
+import FriendsItem from './components/Friend-item' // usando componente de forma local (Recomendado)
 export default {
+    components:{ // usando componente de forma local (Recomendado)
+        'friend-item': FriendsItem
+    },
     data(){
         return {
             friends:[
@@ -640,4 +644,300 @@ export default {
     },
 }
 </script>
+```
+## Slots
+Funciona como a props children do React, para por exemplo poder passar um HTML para dentro de outro componente
+Exemplo:
+
+* BaseCard component
+Cira um componente com slot, neste caso para servir como um wrapper de style
+
+```html
+<template>
+    <div>
+        <slot></slot>
+    </div>
+</template>
+
+<style scoped>
+div {
+  margin: 2rem auto;
+  max-width: 30rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+  padding: 1rem;
+}
+</style>
+
+<script>
+ export default{}
+</script>
+
+```
+
+* UserInfo component
+usando o component BaseCard com
+
+```html
+<template>
+  <base-card>
+    <section>
+      <header>
+        <h3>{{ fullName }}</h3>
+        <base-badge :type="role" :caption="role.toUpperCase()"></base-badge>
+      </header>
+      <p>{{ infoText }}</p>
+    </section>
+  </base-card>
+</template>
+
+<script>
+export default {
+  props: ['fullName', 'infoText', 'role'],
+};
+</script>
+
+<style scoped>
+
+section header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+</style>
+```
+
+### Multiple Slots/Named Slots
+É possível ter mais de um slot no componente, mas para isso quando tiver mais de um slot, todos menos um tem de ter uma identificação, no caso name.
+
+* BaseCard component:
+  
+```html
+<template>
+    <div>
+        <header>
+            <slot name="header"></slot>
+        </header>
+        <slot></slot>
+    </div>
+</template>
+
+<style scoped>
+div {
+  margin: 2rem auto;
+  max-width: 30rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+  padding: 1rem;
+}
+</style>
+
+<script>
+ export default{}
+</script>
+
+```
+* BadgeList component:
+aqui usamos os dois slots, o slot named fica claro pelo uso da tag Template com a diretiva `v-slot:{{NOME_DO_SLOT}}`, porém o segundo não precisa, mas poderia estar entre esta mesma tag com a diretiva: `v-slot:default`
+
+```html
+<template>
+  <section>
+    <base-card>
+        <template v-slot:header>
+            <h2>Available Badges</h2>
+        </template>
+        <ul>
+            <li>
+                <base-badge type="admin" caption="ADMIN"></base-badge>
+            </li>
+            <li>
+                <base-badge type="author" caption="AUTHOR"></base-badge>
+            </li>
+        </ul>
+        <!-- ou -->
+        <!-- <template v-slot:default>
+            <ul>
+                <li>
+                    <base-badge type="admin" caption="ADMIN"></base-badge>
+                </li>
+                <li>
+                    <base-badge type="author" caption="AUTHOR"></base-badge>
+                </li>
+            </ul>
+        </template> -->
+    </base-card>
+  </section>
+</template>
+
+<style scoped>
+
+
+section h2 {
+  margin: 0.5rem 0;
+  color: #3a3a3a;
+}
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: row;
+}
+
+li {
+  margin-right: 1rem;
+}
+</style>
+```
+
+### Slot default value
+Usando o mesmo exemplo do `BaseCard`, podemos definir que caso não seja passado nada para o slot em questão, ele ira renderizar com um valor padrão:
+```html
+<template>
+    <div>
+        <header>
+            <slot name="header">
+                <h2>Valor padrão caso não seja passado nada</h2>
+            </slot>
+        </header>
+        <slot></slot>
+    </div>
+</template>
+
+<style scoped>
+div {
+  margin: 2rem auto;
+  max-width: 30rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+  padding: 1rem;
+}
+</style>
+
+<script>
+ export default{}
+</script>
+
+```
+
+### Slot template var ($slot)
+também é possivel acessar via js e testar se o slot está vazio, neste caso nem renderizamos a tag que incorpora o slot, ou seja a tag <header> e seu contedo só serão renderizados caso o slot header esteja presente.
+
+```html
+<template>
+    <div>
+        <header v-if="$slots.header">
+            <slot name="header">
+            </slot>
+        </header>
+        <slot></slot>
+    </div>
+</template>
+
+<style scoped>
+div {
+  margin: 2rem auto;
+  max-width: 30rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+  padding: 1rem;
+}
+</style>
+
+<script>
+ export default{
+     mounted(){
+        console.log(this.$slots)
+        console.log(this.$slots.default)
+     }
+ }
+</script>
+
+```
+
+### Scoped Slots
+para passar conteúdo dinâmico para coponentes
+
+
+* para slot único
+* 
+o componente com slots dinâmicos:
+```html
+<template>
+    <ul>
+        <li v-for="goal in goals" :key="goal">
+            <slot :item="goal" anotherProp="..."></slot>
+        </li>
+    </ul>
+</template>
+<script>
+
+export default{
+    data() {
+      return{
+          goals:['Finish the course', 'Learn vue']
+      }  
+    },
+}
+</script>
+
+```
+usando-o
+```html
+...
+ <course-goals #default="slotProps">
+    <h2>{{slotProps.item}}</h2>
+    <p>
+        {{ slotProps.anotherProp }}
+    </p>
+</course-goals>
+...
+```
+
+* para slots multiplos:
+
+o componente com slots dinâmicos:
+```html
+<template>
+    <ul>
+        <li v-for="goal in goals" :key="goal">
+            <slot :goal="goal"></slot>
+            <slot name="anotherSlot" item="..."></slot>
+        </li>
+    </ul>
+</template>
+<script>
+
+export default{
+    data() {
+      return{
+          goals:['Finish the course', 'Learn vue']
+      }  
+    },
+}
+</script>
+
+```
+usando-o
+```html
+...
+<course-goals>
+    <template #default="slotProps"> 
+        <h2>{{slotProps.goal}}</h2>
+    </template>
+    <template #anotherSlot="anotherProp">
+        <p>
+            {{ anotherProp.item }}
+        </p>
+    </template>
+</course-goals> 
+...
+```
+
+## Dynamic Component
+No vue existe uma tag de nome `components` que permite chamar um componente dinamicamente:
+
+```html
+<component :is="{{NOME_DO_COMPONENTE}}"></component>
 ```

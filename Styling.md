@@ -52,3 +52,62 @@ Vue.createApp({
     }
 }).mount("#styling")
 ```
+
+## Stylesheet
+No arquivo `.vue` colocamos os estilhos entre as tags <style></style> ou podemos criar um arquivo css separado e importa-lo nas tags: <style src="{{CAMINHO_PARA_O_CSS}}"></style>
+
+exemplo:
+```js
+<template>
+  <div>
+    ...
+  </div>
+</template>
+
+<script>
+...
+
+</script>
+
+<style>
+html {
+  font-family: sans-serif;
+}
+
+body {
+  margin: 0;
+}
+</style>
+
+//OU
+
+// <style src="./app.css"></style>
+```
+### css modules (scoped style)
+Por padrão, a folha de estilo que você defininir em qualquer componente, servirá para o a aplicação inteira. para alterar este comportamento e deixar mais modular você só precisa incluir o attributo `scoped` na tag style de seu arquivo `.vue`
+exemplo:
+```js
+<template>
+  <div>
+    ...
+  </div>
+</template>
+
+<script>
+...
+
+</script>
+
+<style scoped>
+html {
+  font-family: sans-serif;
+}
+
+body {
+  margin: 0;
+}
+</style>
+//OU
+
+// <style scoped src="./app.css"></style>
+```

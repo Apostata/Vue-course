@@ -218,6 +218,40 @@ ou
 </ul>
 ```
 
+### v-slot:{SLOT_NAME} or #{SLOT_NAME}
+Slots funciona como no web-components ou simiar a props children do react. no caso temos 2 slots
+* o primeiro é o <template #header > que já indica pelo nome.
+* o segundo é implicito, que é o conteúdo  <p>{{ infoText }}</p>, apesar de não estar entre a tag template e nomeado, ele é o slot padrão e não precisa de nome, basta olhar no componente que possui os slots, porém pode ser passado com o nome de  <template #default >
+  
+```html
+<template>
+  <base-card classe="teste">
+      <template #header >
+        <h3>{{ fullName }}</h3>
+        <base-badge :type="role" :caption="role.toUpperCase()"></base-badge>
+      </template>
+      <p>{{ infoText }}</p>
+      <!-- 
+        ou 
+        <template #default >
+          <p>{{ infoText }}</p>
+        </template>
+        -->
+  </base-card>
+</template>
+```
+no componente que possui os slots:
+```html
+<template>
+    <div>
+        <header v-if="$slots.header">
+             <slot name="header"></slot>
+        </header>
+        <slot></slot>
+    </div>
+</template>
+```
+
 ## refs
 uso: `this.$refs.{{NOME_DA_REF_NO_HTML}}.value`
 como no react, serve para memorizar um element do html podendo pegar a refeência e seus dados quando quiser
