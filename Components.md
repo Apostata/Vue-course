@@ -941,3 +941,52 @@ No vue existe uma tag de nome `components` que permite chamar um componente dina
 ```html
 <component :is="{{NOME_DO_COMPONENTE}}"></component>
 ```
+### kepping state in dynamic component
+Quando você quer manter o estado do dynamic component, basta envolve-lo com a tag <keep-alive>,
+assim quando mudar o dynamic componente ele irá guardar na memória dos dados dele
+
+```html
+<keep-alive>
+    <component :is="{{NOME_DO_COMPONENTE}}"></component>
+</keep-alive>
+```
+
+## Teleport
+Quando você precisa jogar um elemento do componente em algum outro lugar do html, por exemplo um modal.
+no exemplo abaixo dentro do componentente `ManageGols`, exportamos o `error-alert` para o a tag `body` da página html 
+Exemplo:
+
+```html
+<template>
+    <h2>Manage Goals</h2>
+    <input type="text" ref="goal" />
+    <button @click="setGoal">SetGoal</button>
+
+    <teleport to="body">
+        <error-alert v-if="showAlert">
+            <h2>Input is invalid</h2>
+            <p>please enter at least a few charactres...</p>
+            <button @click="toggleShowModal">OK</button>
+        </error-alert>
+    </teleport>
+</template>
+```
+no html renderizado ficará assim:
+
+```html
+<html>
+    <head>...</head>
+    <body>
+        <div id="app" data-v-app>
+            ... o restante do app
+        </div>
+        <script type="text/javascript" src="/js/chunk-vendors.js"></script>
+        <script type="text/javascript" src="/js/app.js"></script>
+        <dialog open data-v-2374a738>
+            <h2>Input is invalid</h2>
+            <p>please enter at least a few charactres...</p>
+            <button>OK</button>
+        </dialog>
+    </body>
+</html>
+```

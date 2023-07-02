@@ -16,9 +16,10 @@
 
     <button @click="activeOrManageGoals('active-goals')">Active Goals</button>
     <button @click="activeOrManageGoals('manage-goals')">Manage Goals</button>
-    <!-- <active-goals v-if="selectedType === 'active'"></active-goals>
-    <manage-goals v-if="selectedType === 'manage'"></manage-goals> -->
-    <component :is="selectedType"></component>
+
+    <keep-alive>
+      <component :is="selectedType"></component>
+    </keep-alive>
    
   </div>
 </template>
